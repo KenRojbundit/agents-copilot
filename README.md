@@ -47,20 +47,53 @@ The orchestrator classifies each task by complexity:
 
 ## Installation
 
-### Option A: User-level (all repos, recommended)
-
-Copy agents and instructions to your Copilot config directory. They'll be loaded automatically in **every** repository.
+### Quick Setup (full environment)
 
 ```bash
-# Clone the repo
+# 1. Clone and install agents
 git clone https://github.com/KenRojbundit/copilot-agents.git
 cd copilot-agents
-
-# Copy agents to user-level config
-mkdir -p ~/.copilot/agents
+mkdir -p ~/.copilot/agents ~/.copilot/skills
 cp .github/agents/*.agent.md ~/.copilot/agents/
 cp .github/copilot-instructions.md ~/.copilot/copilot-instructions.md
+
+# 2. Install Playwright CLI (browser automation — replaces MCP, supports parallel sessions)
+sudo npm install -g @playwright/cli@latest
+playwright-cli install --skills  # installs skill to .claude/skills/ (works with Copilot too)
+cp -r .claude/skills/playwright-cli ~/.copilot/skills/  # copy to Copilot skills dir
+
+# 3. Verify
+ls ~/.copilot/agents/        # 5 agent files
+ls ~/.copilot/skills/        # playwright-cli skill
+playwright-cli --version     # should print version
 ```
+
+**Optional: Peekaboo (macOS native automation)**
+```bash
+# Only needed on macOS — provides screenshot, UI click/type, window management
+# Add to ~/.copilot/mcp-config.json:
+cat > ~/.copilot/mcp-config.json << 'EOF'
+{
+  "mcpServers": {
+    "peekaboo": {
+      "command": "npx",
+      "args": ["-y", "@steipete/peekaboo", "mcp", "serve", "--transport", "stdio"],
+      "type": "stdio",
+      "tools": [
+        "see", "click", "type", "hotkey", "scroll", "swipe", "move", "drag",
+        "image", "app", "window", "menu", "dock", "space", "dialog", "paste",
+        "clipboard", "list", "sleep", "permissions"
+      ]
+    }
+  }
+}
+EOF
+# Grant Screen Recording + Accessibility to your terminal app in System Settings
+```
+
+### Option A: User-level (all repos, recommended)
+
+The quick setup above installs at user level. Agents load automatically in **every** repository.
 
 **Verify:** `ls ~/.copilot/agents/` should show all 5 agent files.
 
@@ -91,6 +124,14 @@ cd copilot-agents && git pull
 cp .github/agents/*.agent.md ~/.copilot/agents/
 cp .github/copilot-instructions.md ~/.copilot/copilot-instructions.md
 ```
+
+### Why Playwright CLI over MCP?
+
+Microsoft [recommends CLI over MCP](https://github.com/microsoft/playwright-cli) for coding agents:
+- **Token-efficient** — no MCP tool schemas loaded into context
+- **Parallel sessions** — `playwright-cli -s=agent1` and `-s=agent2` run independent browsers
+- **Visual dashboard** — `playwright-cli show` monitors all sessions in real-time
+- Sub-agents call `playwright-cli` via bash — each gets its own browser process
 
 ## Usage
 
