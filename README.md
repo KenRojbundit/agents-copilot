@@ -45,10 +45,54 @@ The orchestrator classifies each task by complexity:
     └── guardian.agent.md            # Security + infra ops + CI/CD
 ```
 
-## Usage
+## Installation
 
-### Drop-in (recommended)
-Copy `.github/` into any repository. The `copilot-instructions.md` will be loaded automatically by Copilot CLI and IDE.
+### Option A: User-level (all repos, recommended)
+
+Copy agents and instructions to your Copilot config directory. They'll be loaded automatically in **every** repository.
+
+```bash
+# Clone the repo
+git clone https://github.com/KenRojbundit/copilot-agents.git
+cd copilot-agents
+
+# Copy agents to user-level config
+mkdir -p ~/.copilot/agents
+cp .github/agents/*.agent.md ~/.copilot/agents/
+cp .github/copilot-instructions.md ~/.copilot/copilot-instructions.md
+```
+
+**Verify:** `ls ~/.copilot/agents/` should show all 5 agent files.
+
+### Option B: Repo-level (single repo)
+
+Copy `.github/` into a specific repository. Agents will only be available when working in that repo.
+
+```bash
+# From the target repo root
+cp -r /path/to/copilot-agents/.github/agents .github/agents
+cp /path/to/copilot-agents/.github/copilot-instructions.md .github/copilot-instructions.md
+```
+
+### Option C: Let Copilot do it
+
+Point Copilot CLI at this repo and ask:
+
+> "Read https://github.com/KenRojbundit/copilot-agents and install the agents at user level (~/.copilot/agents/)"
+
+Copilot will fetch the files from GitHub and place them in the right location.
+
+### Updating
+
+Pull latest and re-copy:
+
+```bash
+cd copilot-agents && git pull
+cp .github/agents/*.agent.md ~/.copilot/agents/
+cp .github/copilot-instructions.md ~/.copilot/copilot-instructions.md
+```
+
+## Usage
 
 ### Explicit invocation
 ```bash
