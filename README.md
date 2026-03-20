@@ -113,6 +113,18 @@ task(agent_type="general-purpose", model="gpt-5.4", prompt="Fix the bug in...")
 task(agent_type="general-purpose", model="gemini-3-pro-preview", prompt="Evaluate this screenshot...")
 ```
 
+## Copilot Plan Compatibility
+
+The agents auto-detect model availability — try the primary model, fall back if unavailable. Here's what each tier gets:
+
+| Tier | Price | Premium Requests | architect/guardian | surgeon | designer |
+|------|-------|-----------------|-------------------|---------|----------|
+| **Pro+** | $39/mo | 1,500/mo | `claude-opus-4.6-fast` | `gpt-5.4` | `gemini-3-pro-preview` |
+| **Pro** | $10/mo | 300/mo | `claude-sonnet-4.6` | `gpt-5.4` | `gemini-3-pro-preview` |
+| **Free** | $0 | 50/mo | `claude-sonnet-4` | `gpt-4.1` | `gemini-3-pro-preview` |
+
+No configuration needed — the instructions include a fallback chain. If Opus 4.6 Fast isn't available on your plan, it automatically falls back to Sonnet 4.6, then Sonnet 4.
+
 ## Key Findings
 
 See [PLAYBOOK.md](PLAYBOOK.md) for the full research playbook including:
