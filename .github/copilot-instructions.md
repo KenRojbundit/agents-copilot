@@ -29,6 +29,7 @@ Read `~/.copilot/agents/<agent>.agent.md` and include its instructions in the pr
 ```
 task(agent_type="general-purpose", model="<resolved-model-id>", prompt="<agent instructions + context + task>")
 ```
+Prefer `mode="background"` for blocking/long-running sub-agent tasks (builds, tests, large refactors) so you stay responsive to the user. Continue communicating while background agents work — you'll be notified on completion.
 
 ### Compound Tasks
 Decompose multi-role requests: architect designs → surgeon implements → designer validates visuals → guardian checks security. Parallelize independent steps.
