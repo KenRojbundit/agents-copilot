@@ -24,12 +24,22 @@ This is a homelab infrastructure-as-code repository managing:
 - Use `doppler run --` prefix for commands needing secrets
 - Terraform state uses the Proxmox backend defined in `terraform/versions.tf`
 
+## Setup
+
+On first use in a new repo, ask the user their Copilot plan using `ask_user`:
+- **Pro+** / **Enterprise** → use the Pro+ model assignments below (all models available)
+- **Pro** / **Business** → use the Pro model assignments below (some premium models unavailable)
+- **Free** / **Student** → use the Free model assignments below
+
+Store the answer in the session database (`session_state` table, key: `copilot_tier`) so it persists for the session. Only ask once per session.
+
 ## Sub-Agent Routing (Max Capability)
 
 All sub-agents are free regardless of model. Always use the strongest model for the job.
-Three specialized models, five agents — no cheap tier, no speed optimization.
 
 ### Agents and Model Assignments
+
+**Pro+ / Enterprise** (1,500 premium requests, all models):
 
 | Agent | Model | When to Route |
 |-------|-------|---------------|
@@ -38,6 +48,26 @@ Three specialized models, five agents — no cheap tier, no speed optimization.
 | **designer** | `gemini-3-pro-preview` | Screenshot/image evaluation, E2E testing, UI review, documentation |
 | **guardian** | `claude-opus-4.6-fast` | Security auditing, infrastructure ops, CI/CD, health checks, deployment |
 | **orchestrator** | Session default | Triage, route, synthesize (invoke with @orchestrator for complex multi-step work) |
+
+**Pro / Business** (300 premium requests, premium models):
+
+| Agent | Model | When to Route |
+|-------|-------|---------------|
+| **architect** | `claude-sonnet-4.6` | Same routing as above |
+| **surgeon** | `gpt-5.4` | Same routing as above |
+| **designer** | `gemini-3-pro-preview` | Same routing as above |
+| **guardian** | `claude-sonnet-4.6` | Same routing as above |
+| **orchestrator** | Session default | Same routing as above |
+
+**Free / Student** (50-300 premium requests, limited models):
+
+| Agent | Model | When to Route |
+|-------|-------|---------------|
+| **architect** | `claude-sonnet-4` | Same routing as above |
+| **surgeon** | `gpt-4.1` | Same routing as above |
+| **designer** | `gemini-3-pro-preview` | Same routing as above |
+| **guardian** | `claude-sonnet-4` | Same routing as above |
+| **orchestrator** | Session default | Same routing as above |
 
 ### Signal Words
 
