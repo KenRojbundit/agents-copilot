@@ -2,36 +2,39 @@
 
 ## Sub-Agent Routing
 
-All sub-agents are free regardless of model. Prefer delegating to sub-agents over doing work directly — they get specialized models at no cost. Only handle trivially simple tasks yourself. Check the available models list and pick the latest version in each line.
+Sub-agents are free. Prefer delegation over doing work directly. Only handle trivially simple tasks yourself.
 
-| Agent | Model Line | When to Route |
-|-------|-----------|---------------|
-| **architect** | Latest Claude Opus (prefer fast variant) | Architecture, planning, research, code review |
-| **surgeon** | Latest GPT | Bug fixes, refactoring, test writing, YAML/config surgery |
-| **designer** | Latest Gemini Pro | Screenshot/image evaluation, UI review, documentation |
-| **guardian** | Latest Claude Opus (prefer fast variant) | Security auditing, infrastructure ops, CI/CD, deployment |
-| **orchestrator** | Session default | Triage, route, synthesize (@orchestrator for complex work) |
+For each agent, use the newest model in its family from the available models list.
 
-### Signal Words
+- **architect** — Latest Claude Opus (fast if available): architecture, planning, research, code review
+- **surgeon** — Latest GPT: bug fixes, refactoring, tests, YAML/config edits
+- **designer** — Latest Gemini Pro: screenshot/image evaluation, UI review, documentation
+- **guardian** — Latest Claude Opus (fast if available): security, infra ops, CI/CD, deployment
 
-| Route to | Keywords |
-|----------|----------|
-| **surgeon** | "fix", "bug", "edit", "refactor", "rename", "test for", "YAML", "config", "patch" |
-| **designer** | "screenshot", "UI", "frontend", "visual", "layout", "design review", "docs" |
-| **guardian** | "security", "audit", "deploy", "CI/CD", "secrets", "infra ops", "kubectl" |
-| **architect** | Everything else — "design", "plan", "scaffold", "review", "research", "migrate" |
+Route by keyword:
+- surgeon: fix, bug, edit, refactor, rename, test, YAML, config, patch
+- designer: screenshot, image, UI, frontend, visual, layout, docs
+- guardian: security, audit, deploy, CI/CD, secrets, infra, kubectl
+- architect: everything else — design, plan, scaffold, review, research, migrate
+
+### Tie-Breaks
+When a request matches multiple agents, route by primary verb:
+- "fix security bug" → surgeon fixes, guardian reviews after
+- "deploy the feature" → guardian deploys, architect reviews if complex
+- "review UI changes" → designer evaluates visuals, architect reviews code
+When unclear: surgeon executes → guardian validates → architect reviews.
 
 ### Delegation
-When delegating, read `~/.copilot/agents/<agent>.agent.md` and include its instructions in the prompt.
+Read `~/.copilot/agents/<agent>.agent.md` and include its instructions in the prompt.
 ```
-task(agent_type="general-purpose", model="<resolved-model-id>", prompt="<full context + task>")
+task(agent_type="general-purpose", model="<resolved-model-id>", prompt="<agent instructions + context + task>")
 ```
 
 ### Compound Tasks
-Decompose multi-role requests into parallel sub-agents: architect designs → surgeon implements → designer validates visuals → guardian checks security.
+Decompose multi-role requests: architect designs → surgeon implements → designer validates visuals → guardian checks security. Parallelize independent steps.
 
 ### Escalation
-surgeon fails → architect analyzes. designer needs structural changes → architect plans, surgeon implements. guardian flags issue → architect redesigns. Any uncertainty → orchestrator handles directly.
+surgeon fails → architect analyzes. designer needs structural changes → architect plans, surgeon implements. guardian flags issue → architect redesigns. Uncertainty → handle directly.
 
 ## Session Continuity
 
