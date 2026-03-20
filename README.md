@@ -8,13 +8,13 @@ All Copilot CLI sub-agents are free regardless of model tier. So why use a weak 
 
 ## Agent Team
 
-| Agent | Model | Role | Why This Model |
-|-------|-------|------|----------------|
+| Agent | Model Line | Role | Why This Model |
+|-------|-----------|------|----------------|
 | **orchestrator** | Session default | Triage complexity, route to specialists, synthesize results | Only agent that costs a premium request |
-| **architect** | `claude-opus-4.6-fast` | Research, plan, design, review | SWE-bench leader (80.8%) |
-| **surgeon** | `gpt-5.4` | Precision edits, bug fixes, TDD implementation | Aider 88% edit precision (vs Opus 72%) |
-| **designer** | `gemini-3-pro-preview` | Visual evaluation, E2E testing, documentation | MMMU-Pro 81% multimodal (vs Opus 73.9%) |
-| **guardian** | `claude-opus-4.6-fast` | Security audit, infrastructure ops, CI/CD | Deep reasoning for security analysis |
+| **architect** | Latest Claude Opus (fast) | Research, plan, design, review | SWE-bench leader, best reasoning + speed |
+| **surgeon** | Latest GPT | Precision edits, bug fixes, TDD implementation | Best edit precision on Aider benchmarks |
+| **designer** | Latest Gemini Pro | Visual evaluation, E2E testing, documentation | Best multimodal (MMMU-Pro leader) |
+| **guardian** | Latest Claude Opus (fast) | Security audit, infrastructure ops, CI/CD | Deep reasoning for security analysis |
 
 ## How It Works
 
@@ -115,25 +115,19 @@ task(agent_type="general-purpose", model="gemini-3-pro-preview", prompt="Evaluat
 
 ## Copilot Plan Compatibility
 
-The agents auto-detect model availability — try the primary model, fall back if unavailable. Here's what each tier gets:
+The instructions specify model **lines** (e.g., "Latest Claude Opus") not exact versions. The agent resolves to the best available model at runtime.
+
+**Note**: "Fast" variants (e.g., `claude-opus-4.6-fast`) are only available on Pro+ and Enterprise. On lower tiers, the agent will use the standard Opus/Sonnet variant instead.
 
 | Tier | Price | Premium Requests | architect/guardian | surgeon | designer |
 |------|-------|-----------------|-------------------|---------|----------|
-| **Pro+** | $39/mo | 1,500/mo | `claude-opus-4.6-fast` | `gpt-5.4` | `gemini-3-pro-preview` |
-| **Pro** | $10/mo | 300/mo | `claude-sonnet-4.6` | `gpt-5.4` | `gemini-3-pro-preview` |
-| **Free** | $0 | 50/mo | `claude-sonnet-4` | `gpt-4.1` | `gemini-3-pro-preview` |
-
-No configuration needed — the instructions include a fallback chain. If Opus 4.6 Fast isn't available on your plan, it automatically falls back to Sonnet 4.6, then Sonnet 4.
+| **Pro+** | $39/mo | 1,500/mo | Opus Fast | Latest GPT | Latest Gemini Pro |
+| **Pro** | $10/mo | 300/mo | Sonnet | Latest GPT | Latest Gemini Pro |
+| **Free** | $0 | 50/mo | Sonnet (older) | GPT (older) | Gemini Pro |
 
 ### Model Freshness
 
-The agents stay current automatically. When routing to a sub-agent, the system checks the available models list for newer versions in the same family (e.g., `claude-opus-4.7-fast` over `claude-opus-4.6-fast`). If a newer model exists:
-
-1. **Prefer it** over the currently assigned version
-2. **Web-validate** — if `web_search` is available, verify benchmarks justify the upgrade
-3. **Persist the change** — update the agent `.agent.md` files and the model table in `copilot-instructions.md` so the upgrade sticks across sessions
-
-This means the system self-maintains — no manual model updates needed as GitHub adds newer models.
+The system self-maintains — when routing, it checks available models for newer versions in the same family and prefers them. If `web_search` is available, it verifies benchmarks before switching. No manual model updates needed.
 
 ## Key Findings
 

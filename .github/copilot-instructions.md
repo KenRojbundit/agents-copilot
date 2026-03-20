@@ -1,47 +1,36 @@
 # Copilot Agent Instructions
 
-## Sub-Agent Routing (Max Capability)
+## Sub-Agent Routing
 
-All sub-agents are free regardless of model. Always use the strongest available model for the job.
+All sub-agents are free regardless of model. Always use the strongest available model. Check the available models list and pick the latest version in each line.
 
-### Agents and Model Assignments
-
-| Agent | Model | When to Route |
-|-------|-------|---------------|
-| **architect** | `claude-opus-4.6-fast` | Architecture, planning, research, scaffolding, code review, complex multi-step logic |
-| **surgeon** | `gpt-5.4` | Targeted edits, bug fixes, refactoring, test writing, YAML/config surgery |
-| **designer** | `gemini-3-pro-preview` | Screenshot/image evaluation, E2E testing, UI review, documentation |
-| **guardian** | `claude-opus-4.6-fast` | Security auditing, infrastructure ops, CI/CD, health checks, deployment |
-| **orchestrator** | Session default | Triage, route, synthesize (invoke with @orchestrator for complex multi-step work) |
-
-If a model is unavailable on your plan, check the tier table in the README for alternatives.
+| Agent | Model Line | When to Route |
+|-------|-----------|---------------|
+| **architect** | Latest Claude Opus (prefer fast variant) | Architecture, planning, research, code review |
+| **surgeon** | Latest GPT | Bug fixes, refactoring, test writing, YAML/config surgery |
+| **designer** | Latest Gemini Pro | Screenshot/image evaluation, UI review, documentation |
+| **guardian** | Latest Claude Opus (prefer fast variant) | Security auditing, infrastructure ops, CI/CD, deployment |
+| **orchestrator** | Session default | Triage, route, synthesize (@orchestrator for complex work) |
 
 ### Signal Words
 
 | Route to | Keywords |
 |----------|----------|
-| **surgeon** | "fix", "bug", "edit", "change this", "refactor", "rename", "test for", "YAML", "config", "patch", "tweak" |
-| **designer** | "screenshot", "looks like", "UI", "frontend", "visual", "layout", "design review", "docs", "document" |
-| **guardian** | "security", "audit", "deploy", "CI/CD", "health", "OWASP", "secrets", "infra ops", "kubectl", "pipeline" |
-| **architect** | Everything else — "design", "plan", "scaffold", "review", "research", "migrate", "how should we" |
+| **surgeon** | "fix", "bug", "edit", "refactor", "rename", "test for", "YAML", "config", "patch" |
+| **designer** | "screenshot", "UI", "frontend", "visual", "layout", "design review", "docs" |
+| **guardian** | "security", "audit", "deploy", "CI/CD", "secrets", "infra ops", "kubectl" |
+| **architect** | Everything else — "design", "plan", "scaffold", "review", "research", "migrate" |
 
-### Delegation Pattern
+### Delegation
 ```
-task(agent_type="general-purpose", model="<agent-model>", prompt="<full context + task>")
+task(agent_type="general-purpose", model="<resolved-model-id>", prompt="<full context + task>")
 ```
 
 ### Compound Tasks
-For requests spanning multiple roles, decompose into parallel sub-agents:
-1. **architect** (Opus Fast) designs the approach
-2. **surgeon** (GPT 5.4) executes precise edits (one per file if parallel-safe)
-3. **designer** (Gemini) validates visual output or writes docs (if applicable)
-4. **guardian** (Opus Fast) validates security and runs health checks
+Decompose multi-role requests into parallel sub-agents: architect designs → surgeon implements → designer validates visuals → guardian checks security.
 
 ### Escalation
-- surgeon edit fails → escalate to architect for deeper analysis
-- designer critique requires structural changes → architect plans, surgeon implements
-- guardian flags security issue → architect redesigns, surgeon patches
-- Any agent uncertain → orchestrator handles directly
+surgeon fails → architect analyzes. designer needs structural changes → architect plans, surgeon implements. guardian flags issue → architect redesigns. Any uncertainty → orchestrator handles directly.
 
 ## Session Continuity
 
