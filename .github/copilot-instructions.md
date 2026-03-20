@@ -6,15 +6,15 @@ All sub-agents are free regardless of model. Always use the strongest available 
 
 ### Agents and Model Assignments
 
-| Agent | Model | Fallback | When to Route |
-|-------|-------|----------|---------------|
-| **architect** | `claude-opus-4.6-fast` | `claude-sonnet-4.6` → `claude-sonnet-4` | Architecture, planning, research, scaffolding, code review, complex multi-step logic |
-| **surgeon** | `gpt-5.4` | `gpt-4.1` | Targeted edits, bug fixes, refactoring, test writing, YAML/config surgery |
-| **designer** | `gemini-3-pro-preview` | — | Screenshot/image evaluation, E2E testing, UI review, documentation |
-| **guardian** | `claude-opus-4.6-fast` | `claude-sonnet-4.6` → `claude-sonnet-4` | Security auditing, infrastructure ops, CI/CD, health checks, deployment |
-| **orchestrator** | Session default | — | Triage, route, synthesize (invoke with @orchestrator for complex multi-step work) |
+| Agent | Model | When to Route |
+|-------|-------|---------------|
+| **architect** | `claude-opus-4.6-fast` | Architecture, planning, research, scaffolding, code review, complex multi-step logic |
+| **surgeon** | `gpt-5.4` | Targeted edits, bug fixes, refactoring, test writing, YAML/config surgery |
+| **designer** | `gemini-3-pro-preview` | Screenshot/image evaluation, E2E testing, UI review, documentation |
+| **guardian** | `claude-opus-4.6-fast` | Security auditing, infrastructure ops, CI/CD, health checks, deployment |
+| **orchestrator** | Session default | Triage, route, synthesize (invoke with @orchestrator for complex multi-step work) |
 
-Use the primary model. If it errors as unavailable, use the fallback.
+If a model is unavailable on your plan, check the tier table in the README for alternatives.
 
 ### Signal Words
 
