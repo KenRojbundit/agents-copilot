@@ -22,6 +22,7 @@ All sub-agents are free regardless of model. Always use the strongest available 
 | **architect** | Everything else — "design", "plan", "scaffold", "review", "research", "migrate" |
 
 ### Delegation
+When delegating, read `~/.copilot/agents/<agent>.agent.md` and include its instructions in the prompt.
 ```
 task(agent_type="general-purpose", model="<resolved-model-id>", prompt="<full context + task>")
 ```
