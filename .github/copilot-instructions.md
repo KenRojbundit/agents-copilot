@@ -65,3 +65,7 @@ For requests spanning multiple roles, decompose into parallel sub-agents:
 - designer critique requires structural changes → architect plans, surgeon implements
 - guardian flags security issue → architect redesigns, surgeon patches
 - Any agent uncertain → orchestrator handles directly
+
+## Session Continuity
+
+Every turn must end with exactly one `ask_user` call containing a brief summary and a required free-text string field named `next_instruction`. Structured options may supplement, never replace, this field. Empty or declined → `ask_user` again.
