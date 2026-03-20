@@ -2,7 +2,7 @@
 
 ## Sub-Agent Routing
 
-All sub-agents are free regardless of model. Always use the strongest available model. Check the available models list and pick the latest version in each line.
+All sub-agents are free regardless of model. Prefer delegating to sub-agents over doing work directly — they get specialized models at no cost. Only handle trivially simple tasks yourself. Check the available models list and pick the latest version in each line.
 
 | Agent | Model Line | When to Route |
 |-------|-----------|---------------|
