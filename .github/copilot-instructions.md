@@ -40,10 +40,6 @@ All sub-agents are free regardless of model. Always use the strongest available 
 
 Use the primary model. If it errors as unavailable, use the fallback.
 
-### Model Freshness
-
-When routing, check available models for newer versions in the same family (e.g., `claude-opus-4.7-fast` over `claude-opus-4.6-fast`). Prefer the newer version. If `web_search` is available, verify the upgrade with benchmark data before switching. After confirming, update this table and the agent `.agent.md` files to persist the change.
-
 ### Signal Words
 
 | Route to | Keywords |

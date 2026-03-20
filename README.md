@@ -125,6 +125,16 @@ The agents auto-detect model availability — try the primary model, fall back i
 
 No configuration needed — the instructions include a fallback chain. If Opus 4.6 Fast isn't available on your plan, it automatically falls back to Sonnet 4.6, then Sonnet 4.
 
+### Model Freshness
+
+The agents stay current automatically. When routing to a sub-agent, the system checks the available models list for newer versions in the same family (e.g., `claude-opus-4.7-fast` over `claude-opus-4.6-fast`). If a newer model exists:
+
+1. **Prefer it** over the currently assigned version
+2. **Web-validate** — if `web_search` is available, verify benchmarks justify the upgrade
+3. **Persist the change** — update the agent `.agent.md` files and the model table in `copilot-instructions.md` so the upgrade sticks across sessions
+
+This means the system self-maintains — no manual model updates needed as GitHub adds newer models.
+
 ## Key Findings
 
 See [PLAYBOOK.md](PLAYBOOK.md) for the full research playbook including:
