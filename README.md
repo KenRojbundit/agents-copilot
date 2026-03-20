@@ -68,27 +68,38 @@ ls ~/.copilot/skills/        # playwright-cli skill
 playwright-cli --version     # should print version
 ```
 
-**Optional: Peekaboo (macOS native automation)**
+**OS-native automation (pick your platform):**
+
+| Platform | Tool | Install | Type |
+|----------|------|---------|------|
+| **macOS** | [Peekaboo](https://github.com/steipete/Peekaboo) | `brew install steipete/tap/peekaboo` | CLI ✅ |
+| **Windows** | [Windows-MCP](https://github.com/CursorTouch/Windows-MCP) | `uvx windows-mcp` (needs Python 3.13+, UV) | MCP only |
+
+**macOS — Peekaboo CLI** (recommended over MCP — same token savings as Playwright CLI):
 ```bash
-# Only needed on macOS — provides screenshot, UI click/type, window management
+brew install steipete/tap/peekaboo
+peekaboo permissions status  # check Screen Recording + Accessibility
+# Grant both permissions to your terminal app in System Settings → Privacy & Security
+peekaboo see --app Finder --json  # test: should return UI element snapshot
+```
+Sub-agents call `peekaboo` via bash: `peekaboo see`, `peekaboo click --on "Button"`, `peekaboo type --text "hello"`, etc.
+
+**Windows — Windows-MCP** (no CLI alternative exists, MCP required):
+```bash
+# Requires Python 3.13+ and UV: pip install uv
 # Add to ~/.copilot/mcp-config.json:
 cat > ~/.copilot/mcp-config.json << 'EOF'
 {
   "mcpServers": {
-    "peekaboo": {
-      "command": "npx",
-      "args": ["-y", "@steipete/peekaboo", "mcp", "serve", "--transport", "stdio"],
-      "type": "stdio",
-      "tools": [
-        "see", "click", "type", "hotkey", "scroll", "swipe", "move", "drag",
-        "image", "app", "window", "menu", "dock", "space", "dialog", "paste",
-        "clipboard", "list", "sleep", "permissions"
-      ]
+    "windows-mcp": {
+      "command": "uvx",
+      "args": ["windows-mcp"]
     }
   }
 }
 EOF
-# Grant Screen Recording + Accessibility to your terminal app in System Settings
+# Tools: Click, Type, Scroll, Drag, Screenshot, Launch, Shell, State (a11y tree), Scrape
+# 2M+ users on Claude Desktop — the most popular Windows automation MCP
 ```
 
 ### Option A: User-level (all repos, recommended)
@@ -125,13 +136,19 @@ cp .github/agents/*.agent.md ~/.copilot/agents/
 cp .github/copilot-instructions.md ~/.copilot/copilot-instructions.md
 ```
 
-### Why Playwright CLI over MCP?
+### Why CLI over MCP?
 
-Microsoft [recommends CLI over MCP](https://github.com/microsoft/playwright-cli) for coding agents:
-- **Token-efficient** — no MCP tool schemas loaded into context
-- **Parallel sessions** — `playwright-cli -s=agent1` and `-s=agent2` run independent browsers
-- **Visual dashboard** — `playwright-cli show` monitors all sessions in real-time
-- Sub-agents call `playwright-cli` via bash — each gets its own browser process
+When both a CLI and MCP server exist for the same tool, **prefer the CLI**:
+- **Token-efficient** — no MCP tool schemas loaded into context (saves thousands of tokens)
+- **Parallel sessions** — CLIs run as independent processes, no shared state
+- **Debuggable** — copy-paste commands to reproduce issues
+- **Sub-agent friendly** — each sub-agent calls via bash, fully isolated
+
+| Tool | CLI | MCP | Recommendation |
+|------|-----|-----|----------------|
+| **Playwright** | `playwright-cli -s=name open url` | `@playwright/mcp` | CLI ✅ ([Microsoft recommends](https://github.com/microsoft/playwright-cli)) |
+| **Peekaboo** | `peekaboo see --app Safari` | `npx @steipete/peekaboo` | CLI ✅ (macOS only) |
+| **Windows-MCP** | ❌ (none) | `uvx windows-mcp` | MCP (only option) |
 
 ## Usage
 
