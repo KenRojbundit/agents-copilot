@@ -1,28 +1,4 @@
-# Copilot Instructions — Homelab Repository
-
-## Repository Context
-
-This is a homelab infrastructure-as-code repository managing:
-- **Proxmox VE** hypervisor (OpenTofu-provisioned VMs)
-- **Kubernetes** cluster with Flux CD GitOps (migrating to Talos Linux)
-- **TrueNAS** NAS with ZFS pools and NFS shares
-- **Cilium** CNI, **Longhorn** storage, **Traefik** ingress, **cert-manager**
-- **External Secrets** with Doppler for secret management
-
-## Directory Structure
-
-- `terraform/` — OpenTofu IaC for Proxmox VMs, TrueNAS config
-- `kubernetes/` — Flux CD manifests (apps, infrastructure, clusters)
-- `hack/` — Utility scripts
-- `secrets/` — Encrypted secret templates (actual secrets in Doppler)
-
-## Conventions
-
-- All infrastructure changes go through OpenTofu (`tofu plan` / `tofu apply`)
-- Kubernetes changes go through Flux CD (push to main → auto-reconcile)
-- Secrets managed via External Secrets Operator + Doppler (never committed)
-- Use `doppler run --` prefix for commands needing secrets
-- Terraform state uses the Proxmox backend defined in `terraform/versions.tf`
+# Copilot Agent Instructions
 
 ## Sub-Agent Routing (Max Capability)
 
