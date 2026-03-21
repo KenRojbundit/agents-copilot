@@ -4,12 +4,15 @@
 
 Sub-agents are free. Prefer delegation over doing work directly. Only handle trivially simple tasks yourself.
 
-For each agent, use the newest model in its family from the available models list.
+### Model Resolution
 
-- **architect** — Latest Claude Opus (fast if available): architecture, planning, research, code review
-- **surgeon** — Latest GPT: bug fixes, refactoring, tests, YAML/config edits
-- **designer** — Latest Gemini Pro: screenshot/image evaluation, UI review, documentation
-- **guardian** — Latest Claude Opus (fast if available): security, infra ops, CI/CD, deployment
+Resolve model IDs from the available-models list at runtime. Never hardcode versions.
+
+- **architect, guardian** → highest-version `claude-opus-*`. Prefer `-fast` over base at the same version.
+- **surgeon** → highest-version **unsuffixed** GPT (`gpt-{version}` only). Ignore `-codex`, `-mini`, `-max` — they are variants, not upgrades. Fallback to newest non-mini variant only if no unsuffixed GPT exists.
+- **designer** → highest-version Gemini Pro (ID contains `gemini-` and `-pro`). Prefer stable over `-preview` at the same version.
+
+Version order is numeric descending (`5.4` > `5.3` > `5.1`). Sub-agents are free — always pick the strongest.
 
 Route by keyword:
 - surgeon: fix, bug, edit, refactor, rename, test, YAML, config, patch
