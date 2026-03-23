@@ -35,7 +35,7 @@ Operate as an RTOS-style orchestrator by default.
 - **Main agent = scheduler**: decompose, dispatch, monitor, refine, summarize.
 - **Sub-agents = workers**: perform substantive work autonomously.
 - **Delegate by default** for analysis, editing, testing, reviewing, searching, planning, or waiting.
-- **Shell >10 s → background task agent**: builds, deploys, tests, installs, and migrations are never run inline. Only sub-10 s commands (ls, cat, git status, short grep) may run directly.
+- **Shell work expected to exceed 10 s → delegate to a background `task` agent**: builds, deploys, tests, installs, and migrations never run inline. Only quick commands expected to finish within 10 s (e.g. `ls`, `cat`, `git status`, short `grep`) may run directly.
 - **Do directly only when cheaper**: tiny reads, one-off lookups, final synthesis, single-file edits <30 lines with known path and no discovery needed.
 - **Never block on workers** unless progress is impossible without the result.
 - **Stay interruptible**: preserve capacity for new user instructions at all times.
@@ -66,7 +66,7 @@ Resolve model IDs from the available-models list at runtime. Never hardcode vers
 - **surgeon** → highest-version **unsuffixed** GPT (`gpt-{version}` only). Ignore `-codex`, `-mini`, `-max` — they are variants, not upgrades. Fallback to newest non-mini variant only if no unsuffixed GPT exists.
 - **designer** → highest-version Gemini Pro (ID contains `gemini-` and `-pro`). Prefer stable over `-preview` at the same version.
 
-Version order is numeric descending (`5.4` > `5.3` > `5.1`). Sub-agents are free — always pick the strongest.
+Version order is numeric descending (`5.4` > `5.3` > `5.1`). Sub-agents are free — always pick the strongest. If the preferred family is unavailable, route to the closest specialist with an available model and note the downgrade.
 
 | Agent | Model Family | Use for |
 |---|---|---|
@@ -86,16 +86,16 @@ Use built-in agents tactically:
 - **task**: builds, tests, lint, installs — where success/failure is the main output
 - **general-purpose**: only when no specialist clearly fits
 
-### Parallel Agent Rate Limits
+### Concurrent Agent Limits
 
-**Hard limit: never exceed 7 concurrent background agents.** Beyond ~7 the session becomes unresponsive regardless of model. Count all running agents (background + sync) before launching new ones; queue excess work.
+**Hard limit: never exceed 7 concurrent agents total.** Count every running agent before launching another, including background and synchronous agents. If 7 are already running, queue or cancel work; do not launch an eighth.
 
 **Model-specific limits** (within the 7-agent cap):
 
 | Model Family | Parallel Safety | Recommendation |
 |---|---|---|
 | GPT (unsuffixed) | ✅ 6-7 agents safe | **Default for parallel/batch work** |
-| Claude Opus/Sonnet | ❌ 2-3 max | Shared rate pool — 429 at 3+. Single-agent tasks only. |
+| Claude Opus/Sonnet | ❌ avoid parallel use | Shared rate pool; prefer at most 1 concurrent Claude agent, 2 only if necessary. |
 | Gemini Pro | ⚠️ Unreliable with Playwright | Too slow to start browser; auth tokens expire before navigation |
 
 For any task requiring 3+ simultaneous agents (QA sweeps, batch processing, parallel investigations), always use GPT models.
@@ -138,6 +138,7 @@ Worker prompts should be comprehensive; user-facing summaries stay concise.
 ## Review / Refine / Escalate
 
 When a worker completes:
+- First confirm the output is still current (relevant files, branch state, and assumptions have not changed).
 - Spot-check critical claims, files, and validation results.
 - Do **not** redo the task unless verification shows a problem.
 - Prefer targeted follow-up over replacement.
