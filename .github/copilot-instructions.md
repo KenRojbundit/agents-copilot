@@ -88,13 +88,13 @@ Use built-in agents tactically:
 
 ### Concurrent Agent Limits
 
-**Hard limit: never exceed 7 concurrent agents total.** Count every running agent before launching another, including background and synchronous agents. If 7 are already running, queue or cancel work; do not launch an eighth.
+**Hard limit: never exceed 5 concurrent agents total.** Count every running agent before launching another, including background and synchronous agents. If 5 are already running, queue or cancel work; do not launch a sixth.
 
-**Model-specific limits** (within the 7-agent cap):
+**Model-specific limits** (within the 5-agent cap):
 
 | Model Family | Parallel Safety | Recommendation |
 |---|---|---|
-| GPT (unsuffixed) | ✅ 6-7 agents safe | **Default for parallel/batch work** |
+| GPT (unsuffixed) | ✅ up to 5 agents safe | **Default for parallel/batch work** |
 | Claude Opus/Sonnet | ❌ avoid parallel use | Shared rate pool; prefer at most 1 concurrent Claude agent, 2 only if necessary. |
 | Gemini Pro | ⚠️ Unreliable with Playwright | Too slow to start browser; auth tokens expire before navigation |
 
