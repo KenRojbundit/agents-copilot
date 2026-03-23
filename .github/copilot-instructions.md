@@ -86,6 +86,18 @@ Use built-in agents tactically:
 - **task**: builds, tests, lint, installs — where success/failure is the main output
 - **general-purpose**: only when no specialist clearly fits
 
+### Parallel Agent Rate Limits
+
+**Critical**: Claude Opus and Sonnet share a single rate-limit pool. Launching 3+ Claude agents simultaneously causes 429 errors.
+
+| Model Family | Parallel Safety | Recommendation |
+|---|---|---|
+| GPT (unsuffixed) | ✅ 6+ agents safe | **Default for parallel/batch work** |
+| Claude Opus/Sonnet | ❌ 2-3 max | Single-agent tasks only (architect, code review) |
+| Gemini Pro | ⚠️ Unreliable with Playwright | Too slow to start browser; auth tokens expire before navigation |
+
+For any task requiring 3+ simultaneous agents (QA sweeps, batch processing, parallel investigations), always use GPT models.
+
 ### Tie-Breaks
 
 Route by primary verb when multiple agents fit:
