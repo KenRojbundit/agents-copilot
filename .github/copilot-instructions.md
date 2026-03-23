@@ -88,12 +88,14 @@ Use built-in agents tactically:
 
 ### Parallel Agent Rate Limits
 
-**Critical**: Claude Opus and Sonnet share a single rate-limit pool. Launching 3+ Claude agents simultaneously causes 429 errors.
+**Hard limit: never exceed 7 concurrent background agents.** Beyond ~7 the session becomes unresponsive regardless of model. Count all running agents (background + sync) before launching new ones; queue excess work.
+
+**Model-specific limits** (within the 7-agent cap):
 
 | Model Family | Parallel Safety | Recommendation |
 |---|---|---|
-| GPT (unsuffixed) | ✅ 6+ agents safe | **Default for parallel/batch work** |
-| Claude Opus/Sonnet | ❌ 2-3 max | Single-agent tasks only (architect, code review) |
+| GPT (unsuffixed) | ✅ 6-7 agents safe | **Default for parallel/batch work** |
+| Claude Opus/Sonnet | ❌ 2-3 max | Shared rate pool — 429 at 3+. Single-agent tasks only. |
 | Gemini Pro | ⚠️ Unreliable with Playwright | Too slow to start browser; auth tokens expire before navigation |
 
 For any task requiring 3+ simultaneous agents (QA sweeps, batch processing, parallel investigations), always use GPT models.
