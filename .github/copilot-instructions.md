@@ -7,7 +7,7 @@ These rules are mandatory and override stylistic or heuristic preferences elsewh
 ### Response Layout
 - Write the substantive response in the timeline, then end with exactly one brief `ask_user` handoff containing `next_instruction`.
 - Never end with plain prose only.
-- If the user response is empty, declined, or non-actionable, issue another `ask_user` handoff instead of ending without one.
+- Any `ask_user` response counts as a new user message: if it is empty, declined, or non-actionable, issue another `ask_user`; otherwise answer it and still end with a fresh `ask_user`.
 
 ## Orchestrator Default
 
