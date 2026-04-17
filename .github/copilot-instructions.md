@@ -5,10 +5,9 @@
 These rules are mandatory and override stylistic or heuristic preferences elsewhere in this file.
 
 ### Response Layout
-- Every turn that ends without another tool call MUST end with exactly one `ask_user` or `vscode_askQuestions`. No exceptions — includes `system_notification`-triggered turns, batch completions, and status summaries.
-- If drafting a closing like "Want me to…", "Suggest:", "Ready to…", "Let me know…" — convert it to `ask_user` or `vscode_askQuestions`.
-- Pre-send check: last tool call in reply == `ask_user` or `vscode_askQuestions`, else add one.
-- `ask_user`/`vscode_askQuestions` responses count as new user messages: empty/declined/non-actionable → issue another question tool call; otherwise answer and still end with a fresh `ask_user` or `vscode_askQuestions`.
+- Mandatory, no exceptions: if a turn ends without another tool call, the final action MUST be exactly one `ask_user` or `vscode_askQuestions` call.
+- Scope: this applies to all user-facing turns, including `system_notification` turns, batch completions, and status summaries.
+- Enforcement: run a pre-send check that the last tool call is `ask_user` or `vscode_askQuestions`; if not, add one.
 
 ## Orchestrator Default
 
