@@ -152,6 +152,10 @@ When both a CLI and MCP server exist for the same tool, **prefer the CLI**:
 
 ## Usage
 
+### Response Tool Rule
+
+When writing instructions or prompts for this setup, end user-facing turns with one question tool call: `ask_user` (generic agent contexts) or `vscode_askQuestions` (VS Code-hosted contexts).
+
 ### Explicit invocation
 ```bash
 # Invoke the orchestrator for complex multi-step tasks

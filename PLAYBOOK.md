@@ -7,13 +7,13 @@ Research findings from building a model-specialized multi-agent architecture for
 ### 1. Sub-Agents Are Free
 All sub-agent invocations (via `task` tool) cost zero premium requests regardless of model. Billing is per **user prompt × model multiplier** — sub-agents are internal tool calls within a single prompt, not separate billing events.
 
-### 2. `ask_user` = Infinite Session
-`ask_user` responses are continuations, not new prompts. Combined with auto-compaction at 95% token limit, one initial prompt powers an entire multi-hour session with unlimited sub-agents.
+### 2. `ask_user` / `vscode_askQuestions` = Infinite Session
+`ask_user` responses (or `vscode_askQuestions` in VS Code-hosted flows) are continuations, not new prompts. Combined with auto-compaction at 95% token limit, one initial prompt powers an entire multi-hour session with unlimited sub-agents.
 
 ### 3. Free Models Spawn Premium Sub-Agents
 GPT-5 mini (0× multiplier) can spawn Opus 4.6 Fast (30×) sub-agents. No tier gating exists.
 
-**The zero-cost chain**: User → GPT-5 mini (free) → ask_user loop (free) → Opus sub-agents (free) = 0 premium requests.
+**The zero-cost chain**: User → GPT-5 mini (free) → ask_user/`vscode_askQuestions` loop (free) → Opus sub-agents (free) = 0 premium requests.
 
 **Caveat**: GPT-5 mini is unreliable as an orchestrator. Recommended: Opus 4.6 as main (3×) with Opus Fast sub-agents.
 
@@ -108,7 +108,7 @@ Routing works via `task` tool's `model` parameter. Agent `.md` files define pers
 | Pattern | Risk | Notes |
 |---------|------|-------|
 | Sub-agents free | Low | Consistent with prompt-based billing model |
-| ask_user infinite session | Low | Auto-compaction is officially documented |
+| ask_user / `vscode_askQuestions` infinite session | Low | Auto-compaction is officially documented |
 | Free model → premium sub-agents | Medium | No tier gating seems like an oversight |
 | Model multiplier rates | Medium | Rates have changed before |
 
