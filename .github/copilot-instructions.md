@@ -5,9 +5,9 @@
 These rules are mandatory and override stylistic or heuristic preferences elsewhere in this file.
 
 ### Response Layout
-- Mandatory, no exceptions: if a turn ends without another tool call, the final action MUST be exactly one `ask_user` or `vscode_askQuestions` call.
-- Scope: this applies to all user-facing turns, including `system_notification` turns, batch completions, and status summaries.
-- Enforcement: run a pre-send check that the last tool call is `ask_user` or `vscode_askQuestions`; if not, add one.
+- Mandatory, no exceptions: every user-facing turn MUST end with exactly one question-tool call.
+- Allowed final call by client: `ask_user` (Copilot CLI) or `vscode_askQuestions` (VS Code).
+- Pre-send check: last action is one allowed question tool and total question-tool calls in the turn equals 1.
 
 ## Orchestrator Default
 
