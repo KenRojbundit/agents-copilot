@@ -5,9 +5,15 @@
 These rules are mandatory and override stylistic or heuristic preferences elsewhere in this file.
 
 ### Response Layout
-- Mandatory, no exceptions: every user-facing turn MUST end with exactly one question-tool call.
+- Mandatory, no exceptions: every user-facing turn MUST end with exactly one question-tool call, never plain text.
 - Allowed final call by client: `ask_user` (Copilot CLI) or `vscode_askQuestions` (VS Code).
 - Pre-send check: last action is one allowed question tool and total question-tool calls in the turn equals 1.
+- No assistant content may appear after that final tool call.
+- Fail closed: if any non-tool content is queued after the final question-tool call, do not send; fix the turn to comply.
+
+### Turn-End Compliance Macro
+- Pre-send invariant: `COUNT(question_tool_calls)==1 && LAST_ACTION in {ask_user,vscode_askQuestions} && NO_CONTENT_AFTER_LAST_CALL`.
+- If invariant fails, do not send; rewrite so the only final action is one question-tool call (including brief acknowledgements).
 
 ## Orchestrator Default
 
