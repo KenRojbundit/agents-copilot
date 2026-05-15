@@ -10,6 +10,7 @@ These rules are mandatory and override stylistic or heuristic preferences elsewh
 - Pre-send check: last action is one allowed question tool and total question-tool calls in the turn equals 1.
 - No assistant content may appear after that final tool call.
 - Fail closed: if any non-tool content is queued after the final question-tool call, do not send; fix the turn to comply.
+- Applies after question-tool responses too: even "no", "none", or "stop" acknowledgements must end with the required question-tool call.
 
 ### Turn-End Compliance Macro
 - Pre-send invariant: `COUNT(question_tool_calls)==1 && LAST_ACTION in {ask_user,vscode_askQuestions} && NO_CONTENT_AFTER_LAST_CALL`.
